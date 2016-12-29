@@ -27,7 +27,7 @@ public class MapContent : MonoBehaviour {
                 float p = Random.Range(0.1f, 1f);
                 if (p < RandomFillContent)
                 {
-                    int p2 = (int)Random.Range(1f, 4f);
+                    int p2 = (int)Random.Range(1f, 5f);
                     if ( p2 == 1 && Map.map[x, y] == Map.mud)
                     {
                         Map.map[x, y] += Map.house;
@@ -54,6 +54,11 @@ public class MapContent : MonoBehaviour {
                                 Map.map[x, y] += Map.wood;
                                 break;
                         }
+                        continue;
+                    }
+                    if (p2 == 4 && Map.map[x, y] == Map.mud || p2 == 4 && Map.map[x, y] == Map.grass)
+                    {
+                        Map.map[x, y] += Map.monsterStone;
                         continue;
                     }
                 }

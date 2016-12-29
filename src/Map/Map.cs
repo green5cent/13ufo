@@ -19,6 +19,8 @@ public class Map {
     public const int house = 400;
     public const int stone = 500;
 
+    public const int monsterStone = 1000;
+
     static Map()
     {
         map = new int[width, height];

@@ -7,33 +7,36 @@ public class DrawMap : MonoBehaviour {
     Transform bg;
     Transform land;
     Transform content;
+    Transform enemys;
 
-	void Start () {
+    void Start() {
         bg = GameObject.Find("Mud").GetComponent<Transform>();
         land = GameObject.Find("Land").GetComponent<Transform>();
         content = GameObject.Find("Content").GetComponent<Transform>();
+        enemys = GameObject.Find("Enemys").GetComponent<Transform>();
         DrawLandform();
 
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    // Update is called once per frame
+    void Update() {
+
+    }
 
     void DrawLandform()
     {
         DrawContent();
-
         DrawLand();
+        GameObject obj = GameObject.Find("Enemys");
+        obj.AddComponent<EnemysController>();
     }
 
     int SelectMarginDraw(int item, int gridX, int gridY)
     {
-        if (gridX == 0 || gridX  == Map.width-1 || gridY == 0 || gridY  == Map.height-1)
+        if (gridX == 0 || gridX == Map.width - 1 || gridY == 0 || gridY == Map.height - 1)
             return 2;
 
-        if (gridX - 1 >= 0  && gridX + 1 < Map.width && gridY - 1 >= 0  && gridY + 1 < Map.height)
+        if (gridX - 1 >= 0 && gridX + 1 < Map.width && gridY - 1 >= 0 && gridY + 1 < Map.height)
         {
             bool left = GetLand(item, gridX - 1, gridY);
             bool right = GetLand(item, gridX + 1, gridY);
@@ -67,19 +70,19 @@ public class DrawMap : MonoBehaviour {
 
     void DrawLand()
     {
-        for(int x=0;x<Map.width;x++)
+        for (int x = 0; x < Map.width; x++)
         {
-            for(int y=0;y<Map.height;y++)
+            for (int y = 0; y < Map.height; y++)
             {
                 string mud = "mud4";
 
-                DrawOne( mud, x, y, bg);
+                DrawOne(mud, x, y, bg);
 
             }
         }
     }
 
-    string SelectBaseDraw(int count,string name)
+    string SelectBaseDraw(int count, string name)
     {
         int i = (int)Random.Range(1f, (float)count);
 
@@ -88,13 +91,18 @@ public class DrawMap : MonoBehaviour {
 
 
 
-    void DrawOne( string name, int x, int y,Transform parent)
+    void DrawOne(string name, int x, int y, Transform parent)
     {
         Transform item;
         item = Instantiate(Resources.Load<Transform>("ItemLandform"));
         item.SetParent(parent);
         item.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(name) as Sprite;
-        
+
+        if (x == 0 || x == Map.width || y == 0 || y == Map.height)
+        {
+            item.gameObject.AddComponent<BoxCollider2D>();
+        }
+
         item.position = new Vector3(x * 0.4f, y * 0.4f, 0);
     }
 
@@ -121,7 +129,7 @@ public class DrawMap : MonoBehaviour {
         {
             t = 0;
             t = Map.map[neighbourX,neighbourY] - i;
-            if (t == Map.tree || t == Map.brushwood || t == Map.stone || t == Map.house || t == Map.wood)
+            if (t == Map.tree || t == Map.brushwood || t == Map.stone || t == Map.house || t == Map.wood||t==Map.monsterStone) //判断是否有他本身
             {
               
                 if (i == item )
@@ -180,7 +188,13 @@ public class DrawMap : MonoBehaviour {
                         DrawLandOther(i, x, y);
                         break;
                     }
+                    if (a == Map.monsterStone)
+                    {
 
+                        DrawOne(MapItemName.monsterstone, x, y, enemys, "enemy");
+                        DrawLandOther(i, x, y);
+                        break;
+                    }
                 }
             }
         }
@@ -205,7 +219,7 @@ public class DrawMap : MonoBehaviour {
             if (i != 0)
             {
                 string water = MapItemName.water + i.ToString();
-                DrawOne(water, x, y, land);
+                DrawOne(water, x, y, land,"Itemwater");
             }
 
         }

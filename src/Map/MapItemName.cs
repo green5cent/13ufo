@@ -14,4 +14,6 @@ public class MapItemName {
     public const string stone = "stone";
     public const string tree = "tree";
     public const string wood = "wood";
+
+    public const string monsterstone = "enemy";
 }
